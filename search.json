@@ -1,0 +1,30 @@
+[
+  {
+    "objectID": "sources.html",
+    "href": "sources.html",
+    "title": "Sources",
+    "section": "",
+    "text": "The dataset used in this project is the ‘Income Dataset’ from Kaggle. It can be accessed at: https://www.kaggle.com/datasets/mastmustu/income"
+  },
+  {
+    "objectID": "graphs.html",
+    "href": "graphs.html",
+    "title": "Graphs",
+    "section": "",
+    "text": "Here are some more graphs which explore how other factors (work class, age, sex, and race) impacted income!"
+  },
+  {
+    "objectID": "about.html",
+    "href": "about.html",
+    "title": "About",
+    "section": "",
+    "text": "I’m Tulika, a highschooler at CJCP (Class of 2027). Take a look at my Github, and feel free to contact me at puniatulika@gmail.com.\nMy project is about the correlation between education level (as well as other factors) and income. The GitHub repository can be accessed here: https://github.com/puniat/income\nThis project was created as a part of Kane’s Data Science Bootcamp. More information available at: https://bootcamp.davidkane.info/"
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Correlation Between Education Level and Income",
+    "section": "",
+    "text": "Education levels may not influence income as significantly as commonly believed. Data for this analysis is sourced from the Kaggle dataset ‘Income Data,’ which covers information such as individual income, education level, age, race, sex, and more. Although individuals with undergraduate and postgraduate degrees may have a higher income in certain cases, your education level does not severely impact your income (this mainly applies to 10th grade and on)."
+  }
+]
