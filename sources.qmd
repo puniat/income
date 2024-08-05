@@ -1,0 +1,6 @@
+---
+title: "Sources"
+format: html
+---
+
+The dataset used in this project is the 'Income Dataset' from Kaggle. It can be accessed at: <https://www.kaggle.com/datasets/mastmustu/income>

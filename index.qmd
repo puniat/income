@@ -1,0 +1,89 @@
+---
+title: "Correlation Between Education Level and Income"
+author: "Tulika Punia"
+format: html
+execute: 
+  echo: false
+---
+```{r}
+#| message: FALSE
+#| warning: FALSE
+library(tidyverse)
+library(tidybayes)
+library(brms)
+library(gtsummary)
+library(scales)
+```
+```{r}
+# Load your data
+df <- read_csv("test.csv", show_col_types = FALSE)
+```
+```{r}
+#| cache: true
+#| warning: FALSE
+# Bayesian regression model
+fit_gauss <- brm(formula = fnlwgt ~ age,
+                 data = df,
+                 family = gaussian(),
+                 refresh = 0,
+                 silent = 2,
+                 seed = 9)
+
+```
+```{r}
+#| warning: FALSE
+# New data for prediction
+ndata <- tibble(age = seq(min(df$age), max(df$age), length.out = 100))
+```
+```{r}
+predicted <- fit_gauss |> 
+  add_epred_draws(newdata = ndata)
+
+#| warning: FALSE
+# Jitter plot for Income vs. Education Level
+# Define the custom order for education levels
+education_order <- c("Bachelors", "Masters", "Doctorate", "HS-grad", "Some-college", "Assoc-acdm", "Assoc-voc", "12th", "11th", "10th", "9th", "7th-8th", "5th-6th", "1st-4th", "Preschool")
+
+# Define the custom labels for education levels
+education_labels <- c(
+  "Bachelors" = "Bachelor's Degree",
+  "Masters" = "Master's Degree",
+  "Doctorate" = "Doctorate",
+  "HS-grad" = "High School Graduate",
+  "Some-college" = "Some College",
+  "Assoc-acdm" = "Associate's Degree (Academic)",
+  "Assoc-voc" = "Associate's Degree (Vocational)",
+  "12th" = "12th Grade (No Diploma)",
+  "11th" = "11th Grade",
+  "10th" = "10th Grade",
+  "9th" = "9th Grade",
+  "7th-8th" = "7th-8th Grade",
+  "5th-6th" = "5th-6th Grade",
+  "1st-4th" = "1st-4th Grade",
+  "Preschool" = "Preschool"
+)
+
+# Remove rows with NA in the education column and create the plot
+ggplot(df |> filter(!is.na(education), education %in% education_order), aes(x = fnlwgt, y = factor(education, levels = education_order))) +
+  geom_jitter(aes(color = education), height = 0.2, alpha = 0.5) +
+  scale_y_discrete(labels = education_labels) +
+  labs(
+    title = "Income vs. Education Level",
+    subtitle = "Education level may not impact income as much as 
+people believe it does",
+    x = "Income",
+    y = "Education Level",
+    caption = "Source: Income Dataset (Kaggle)"
+  ) +
+  theme_minimal() +
+  theme(
+    plot.title = element_text(hjust = 0, size = 16),
+    plot.subtitle = element_text(hjust = 0, size = 14),
+    plot.caption = element_text(hjust = 0, size = 10),
+    axis.title = element_text(size = 14),
+    axis.text.y = element_text(size = 10),  # Adjust font size for y-axis labels
+    axis.text.x = element_text(size = 12),
+    legend.position = "none"  # Remove the legend
+  )
+```
+Education levels may not influence income as significantly as commonly believed. Data for this analysis is sourced from the Kaggle dataset 'Income Data,' which covers information such as individual income, education level, age, race, sex, and more. Although individuals with undergraduate and postgraduate degrees may have a higher income in certain cases, your education level does not severely impact your income (this mainly applies to 10th grade and on).

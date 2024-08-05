@@ -1,0 +1,9 @@
+---
+title: "About"
+format: html
+---
+I’m Tulika, a highschooler at CJCP (Class of 2027). Take a look at my [Github](https://github.com/puniat), and feel free to contact me at puniatulika@gmail.com.
+
+My project is about the correlation between education level (as well as other factors) and income. The GitHub repository can be accessed here: <https://github.com/puniat/income>
+
+This project was created as a part of Kane’s Data Science Bootcamp. More information available at: <https://bootcamp.davidkane.info/>

@@ -1,0 +1,151 @@
+---
+title: "Graphs"
+format: html
+execute: 
+  echo: false
+  warning: FALSE
+---
+
+Here are some more graphs which explore how other factors (work class, age, sex, and race) impacted income!
+```{r}
+#| message: FALSE
+#| 
+library(tidyverse)
+library(tidybayes)
+library(brms)
+library(gtsummary)
+library(scales)
+```
+```{r}
+# Load your data
+df <- read_csv("test.csv", show_col_types = FALSE)
+```
+```{r}
+#| cache: true
+# Bayesian regression model
+fit_gauss <- brm(formula = fnlwgt ~ age,
+                 data = df,
+                 family = gaussian(),
+                 refresh = 0,
+                 silent = 2,
+                 seed = 9)
+
+```
+```{r}
+# New data for prediction
+ndata <- tibble(age = seq(min(df$age), max(df$age), length.out = 100))
+```
+```{r}
+predicted <- fit_gauss |> 
+  add_epred_draws(newdata = ndata)
+
+custom_labels <- c(
+  "Private" = "Private Sector",
+  "Self-emp-not-inc" = "Self-Employed (Not Inc.)",
+  "Self-emp-inc" = "Self-Employed (Inc.)",
+  "Local-gov" = "Local Government",
+  "State-gov" = "State Government",
+  "Federal-gov" = "Federal Government",
+  "Without-pay" = "Without Pay",
+  "Never-worked" = "Never Worked"
+)
+# Create bar plot with error bars and custom workclass names
+ggplot(df, aes(x = reorder(workclass, fnlwgt, FUN = mean), y = fnlwgt)) +
+  stat_summary(fun = mean, geom = "bar", fill = "lightgrey", color = "black", width = 0.7) +
+  stat_summary(fun.data = mean_se, geom = "errorbar", width = 0.2) +
+  scale_x_discrete(labels = custom_labels) +
+  labs(title = "Mean Income by Work class",
+       subtitle = "Local government jobs have the highest mean income",
+       x = "Work class",
+       y = "Income",
+       caption = "Source: Income Dataset
+       (Kaggle)") +
+  coord_flip() +  # Flip coordinates to make labels horizontal
+  theme_minimal() +
+  theme(
+    plot.title = element_text(hjust = 0, size = 16),  # Align title to the left
+    plot.subtitle = element_text(hjust = 0, size = 14),  # Align subtitle to the left
+    axis.title = element_text(size = 14),
+    axis.text = element_text(size = 12)
+  )
+```
+```{r}
+# Density plot for Income Distribution by Age Group
+# Create custom age group labels
+age_breaks <- c(20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70)
+age_labels <- paste(head(age_breaks, -1), tail(age_breaks, -1), sep = "-")
+
+# Filter out NA values from the age column
+df_filtered <- df |>
+  filter(!is.na(age))
+
+# Create the age group variable while filtering out NAs
+df_filtered <- df_filtered |>
+  mutate(age_group = cut(age, breaks = age_breaks, labels = age_labels, include.lowest = TRUE))
+
+# Plot with updated age groups, labels, x-axis limit, and formatted x-axis labels
+ggplot(df_filtered, aes(x = fnlwgt, fill = age_group)) +
+  geom_density(alpha = 0.5) +
+  labs(title = "Income Distribution by Age Group",
+       subtitle = "The 55-60 age range has the highest number of people earning approximately 
+$500,000",
+       x = "Income",
+       y = NULL,  # Remove y-axis label
+       fill = "Age Group",
+       caption = "Source: Income Dataset
+(Kaggle)") +
+  scale_x_continuous(limits = c(0, 500000), labels = scales::label_comma()) +  # Set x-axis limit and format labels
+  theme_minimal() +
+  theme(
+    plot.title = element_text(hjust = 0, size = 16),  # Align title to the left
+    plot.subtitle = element_text(hjust = 0, size = 14),  # Align subtitle to the left
+    axis.title = element_text(size = 14),
+    axis.text = element_text(size = 12),
+    axis.text.y = element_blank()  # Remove y-axis text
+  )
+```
+```{r}
+# Boxplot for Income Distribution by Race with updated labels
+ggplot(df, aes(x = race, y = fnlwgt, fill = race)) +
+  geom_boxplot(outlier.colour = "red", outlier.shape = 16, outlier.size = 2) +
+  scale_fill_manual(values = c("lightblue", "lightgreen", "lightcoral", "lightyellow", "lightpink")) +
+  scale_x_discrete(labels = c(
+    "Amer-Indian-Eskimo" = "American Indian",
+    "Asian-Pac-Islander" = "Asian and Pacific Islander",
+    "Black" = "Black",
+    "White" = "White",
+    "Other" = "Other"
+  )) +
+  labs(title = "Income Distribution by Race",
+       subtitle = "Black and white people have the highest income amounts",
+       x = "Race",
+       y = "Income",
+       caption = "Source: Income Dataset
+       (Kaggle)") +
+  theme_minimal() +
+  theme(
+    plot.title = element_text(hjust = 0, size = 16),  # Align title to the left
+    axis.title = element_text(size = 14),
+    axis.text = element_text(size = 12),
+    axis.text.x = element_text(angle = 45, hjust = 1)  # Rotate x-axis labels to avoid overlap
+  )
+```
+```{r}
+# Violin plot for Gender vs. Income
+ggplot(df, aes(x = gender, y = fnlwgt, fill = gender)) +
+  geom_violin(trim = FALSE) +
+  scale_fill_manual(values = c("male" = "lightblue", "female" = "lightpink")) +
+  labs(title = "Income Distribution by Gender",
+       subtitle = "Income distribution by gender shows similar patterns with slight variations",
+       x = "Gender",
+       y = "Income",
+       caption = "Source: Income Dataset
+       (Kaggle)") +
+  theme_minimal() +
+  theme(
+    plot.title = element_text(hjust = 0, size = 16),  # Align title to the left
+    axis.title = element_text(size = 14),
+    axis.text = element_text(size = 12)
+  )
+```
+
