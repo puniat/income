@@ -25,6 +25,6 @@
     "href": "index.html",
     "title": "Correlation Between Education Level and Income",
     "section": "",
-    "text": "Education levels may not influence income as significantly as commonly believed. Data for this analysis is sourced from the Kaggle dataset ‘Income Data,’ which covers information such as individual income, education level, age, race, sex, and more. Although individuals with undergraduate and postgraduate degrees may have a higher income in certain cases, your education level does not severely impact your income (this mainly applies to 10th grade and on)."
+    "text": "This project aims to analyze the correlation between education levels and income using a Bayesian regression model. It visualizes income data against various education levels to explore the common belief that higher education correlates strongly with higher income.\n\n\n\n\n\n\n\n\n\nEducation levels may not influence income as significantly as commonly believed. Data for this analysis is sourced from the Kaggle dataset ‘Income Data,’ which covers information such as individual income, education level, age, race, sex, and more. Although individuals with undergraduate and postgraduate degrees may have a higher income in certain cases, your education level does not severely impact your income (this mainly applies to 10th grade and on)."
   }
 ]
